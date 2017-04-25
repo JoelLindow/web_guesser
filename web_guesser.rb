@@ -6,9 +6,12 @@ SECRET_NUMBER = rand(100)
 get '/' do
   guess = params["guess"] || "x"
   message = check_guess(guess)
-  erb :index, :locals => {:number => SECRET_NUMBER, :message => message}
+  erb :index, :locals => {
+                          :number => SECRET_NUMBER,
+                          :message => message,
+                          :color => determine_color(guess)
+                          }
 end
-
 
 def check_guess(guess)
   if guess == "x"
@@ -20,6 +23,18 @@ def check_guess(guess)
   elsif guess.to_i < SECRET_NUMBER
     low_message(guess)
   end
+end
+
+def determine_color(guess)
+  if guess == "x"
+    "#ffffff"
+  elsif guess.to_i == SECRET_NUMBER
+   "#00cc66"
+ elsif (guess.to_i > (SECRET_NUMBER + 5)) || (guess.to_i < (SECRET_NUMBER - 5))
+   "#ff3333"
+ elsif (guess.to_i > SECRET_NUMBER) || (guess.to_i < SECRET_NUMBER)
+   "#ffcccc"
+ end
 end
 
 def high_message(guess)
